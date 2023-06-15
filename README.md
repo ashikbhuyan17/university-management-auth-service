@@ -19,10 +19,14 @@ yarn add -D eslint-config-prettier
   }
 
 
-  husky=> ami jody kono kichu fixed korte vhule jai bhe bhul code or code format bhul vabey push kore dey tkn husky push korar agey eslint and prettier check kore push hbe
+  husky=> ami jody kono kichu fixed korte vhule jai bhe bhul code or code format bhul vabey push kore dey tokon husky push korar agey eslint and prettier check kore and sob tik takle push kore 
 
   ami jokon push korbo tkn husky dayotho hbe eslint and format check kora thn push kora and error asle push hbe na , push cancel hoiye jabe 
   yarn add husky --dev
   yarn husky install
   yarn husky add .husky/pre-commit "npm test"
   yarn dlx husky-init --yarn2 && yarn
+
+
+lint-staged => shudhu stagging file gulu ke lint korbe 
+yarn add -D lint-staged
