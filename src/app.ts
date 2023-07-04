@@ -1,8 +1,12 @@
 import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
+<<<<<<< HEAD
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
 import { UserRoutes } from './app/modules/users/user.route'
 import ApiError from './errors/ApiError'
+=======
+import usersRouter from './app/modules/users/users.route'
+>>>>>>> dda208607fcb64be2ae940ece0fdf087a30eecd1
 const app: Application = express()
 
 app.use(cors())
