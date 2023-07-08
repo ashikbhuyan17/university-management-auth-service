@@ -1,0 +1,51 @@
+12.2 => console.log(app.get('env') => development
+console.log(process.env)  
+
+        process.cwd(), //current directory
+
+12-9: Different ways to handle error
+app.get('/', (req: Request, res: Response, next: NextFunction) => {
+  throw new Error('error')
+  //next('next function er bitore kichu likle eta error bujay ja global error handle kore') //Error
+})
+
+//global error handle
+app.use((err, req: Request, res: Response, next: NextFunction) => {
+if(err instanceof Error){ //when throw 
+ res.ststus(400).json({error:err})
+}
+  res.ststus(500).json('Something went wrong') //when next()
+})
+
+12-10: Optimize your error handling methodology
+{
+  "error": {
+    "errors": {
+      "role": {
+        "name": "ValidatorError",
+        "message": "Path `role` is required.",
+        "properties": {
+          "message": "Path `role` is required.",
+          "type": "required",
+          "path": "role"
+        },
+        "kind": "required",
+        "path": "role"
+      }
+    },
+    "_message": "User validation failed",
+    "name": "ValidationError",
+    "message": "User validation failed: role: Path `role` is required."
+  }
+}
+
+mongoose validate error
+
+
+13-2 : handle promised (7 minutes)
+unhandle promise rejection hole server dup dap chash hoiye jabe tay etake vordho vabe crash korte hbe mane server sob kichu 
+off kore thn process take off kore dew cz amra jni node js ekta process
+
+13-5: How to organize your zod validation
+mongoose e to validation korbey amra cachi tar age zod diye validation korte 
+tay route e validation check korbo 
