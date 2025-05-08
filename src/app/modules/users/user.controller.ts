@@ -13,7 +13,16 @@ const createUser: RequestHandler = async (req, res, next) => {
     next(err)
   }
 }
+const getUser = async (req, res) => {
+  const findUser = await UserService.getUser()
+  res.status(200).json({
+    success: true,
+    message: 'user created successfully!',
+    data: findUser,
+  })
+}
 
 export const UserController = {
   createUser,
+  getUser,
 }

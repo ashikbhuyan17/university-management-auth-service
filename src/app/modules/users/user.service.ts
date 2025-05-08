@@ -10,7 +10,7 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   user.id = id
   // default password
   if (!user.password) {
-    user.password = config.default_user_pass as string
+    user.password = config.default_user_pass as string //type alias , je ami sure eta string hbe
   }
 
   const createdUser = await User.create(user)
@@ -21,6 +21,11 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   return createdUser
 }
 
+const getUser = async (): Promise<IUser[] | null> => {
+  const userList = await User.find({})
+  return userList
+}
 export const UserService = {
   createUser,
+  getUser,
 }
