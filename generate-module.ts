@@ -1,3 +1,6 @@
+//CLI to generate module boilerplate
+// yarn run generate:module students
+
 import * as fs from 'fs';
 import * as path from 'path';
 

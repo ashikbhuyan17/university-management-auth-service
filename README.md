@@ -58,3 +58,6 @@ winston → কাস্টম লগ ও ফাইল লগ করার জ�
 
 
 
+<!-- CLI to generate module boilerplate
+yarn run generate:module students
+ -->
