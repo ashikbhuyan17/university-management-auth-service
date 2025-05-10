@@ -1,3 +1,1 @@
-// utils file for students module
-
-export {};
+// Utility functions for students
