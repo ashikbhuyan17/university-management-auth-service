@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 /* eslint-disable no-unused-expressions */
+
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import { errorlogger } from '../../shared/logger'
 import { IGenericErrorMessage } from '../../interfaces/error'
@@ -25,21 +25,21 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     message = error.message
     errorMessages = error?.message
       ? [
-          {
-            path: '',
-            message: error?.message,
-          },
-        ]
+        {
+          path: '',
+          message: error?.message,
+        },
+      ]
       : []
   } else if (error instanceof Error) {
     message = error?.message
     errorMessages = error?.message
       ? [
-          {
-            path: '',
-            message: error?.message,
-          },
-        ]
+        {
+          path: '',
+          message: error?.message,
+        },
+      ]
       : []
   }
   res.status(statusCode).json({

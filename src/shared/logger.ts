@@ -18,7 +18,7 @@ const logger = createLogger({
   level: 'info',
   format: combine(label({ label: 'PH' }), timestamp(), myFormat),
   transports: [
-    new transports.Console(),
+    new transports.Console(), //log showing in  console
     new DailyRotateFile({
       filename: path.join(
         process.cwd(),

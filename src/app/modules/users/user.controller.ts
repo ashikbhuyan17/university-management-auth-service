@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express-serve-static-core'
+import { RequestHandler } from 'express'
 import { UserService } from './user.service'
 const createUser: RequestHandler = async (req, res, next) => {
   try {
@@ -10,6 +10,9 @@ const createUser: RequestHandler = async (req, res, next) => {
       data: result,
     })
   } catch (err) {
+    // res.status(400).json({
+    //   error: err
+    // })
     next(err)
   }
 }
