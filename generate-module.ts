@@ -53,7 +53,7 @@ if (!moduleName) {
 const lowerName = moduleName.toLowerCase();
 const pascalName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
 
-const baseDir = path.join(__dirname, 'src', 'app', 'modules', lowerName);
+const baseDir = path.join(__dirname, 'src', 'app', 'modules', moduleName);
 fs.mkdirSync(baseDir, { recursive: true });
 
 const templates: Record<string, string> = {
@@ -69,9 +69,9 @@ export type ${pascalName}Model = Model<I${pascalName}, Record<string, unknown>>;
 `,
 
   model: `import { Schema, model } from 'mongoose';
-import { I${pascalName}, ${pascalName}Model } from './${lowerName}.interface';
+import { I${pascalName}, ${pascalName}Model } from './${moduleName}.interface';
 
-const ${lowerName}Schema = new Schema<I${pascalName}>(
+const ${moduleName}Schema = new Schema<I${pascalName}>(
   {
     id: { type: String, required: true, unique: true },
     role: { type: String, required: true },
@@ -80,11 +80,11 @@ const ${lowerName}Schema = new Schema<I${pascalName}>(
   { timestamps: true }
 );
 
-export const ${pascalName} = model<I${pascalName}, ${pascalName}Model>('${pascalName}', ${lowerName}Schema);
+export const ${pascalName} = model<I${pascalName}, ${pascalName}Model>('${pascalName}', ${moduleName}Schema);
 `,
 
-  service: `import { I${pascalName} } from './${lowerName}.interface';
-import { ${pascalName} } from './${lowerName}.model';
+  service: `import { I${pascalName} } from './${moduleName}.interface';
+import { ${pascalName} } from './${moduleName}.model';
 
 export const create${pascalName} = async (data: I${pascalName}): Promise<I${pascalName}> => {
   const result = await ${pascalName}.create(data);
@@ -109,11 +109,11 @@ export const delete${pascalName} = async (id: string): Promise<I${pascalName} | 
 `,
 
   controller: `import { RequestHandler } from 'express';
-import * as ${lowerName}Service from './${lowerName}.service';
+import * as ${moduleName}Service from './${moduleName}.service';
 
 export const create${pascalName}: RequestHandler = async (req, res, next) => {
   try {
-    const result = await ${lowerName}Service.create${pascalName}(req.body);
+    const result = await ${moduleName}Service.create${pascalName}(req.body);
     res.status(201).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -122,7 +122,7 @@ export const create${pascalName}: RequestHandler = async (req, res, next) => {
 
 export const get${pascalName}s: RequestHandler = async (req, res, next) => {
   try {
-    const result = await ${lowerName}Service.get${pascalName}s();
+    const result = await ${moduleName}Service.get${pascalName}s();
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -131,7 +131,7 @@ export const get${pascalName}s: RequestHandler = async (req, res, next) => {
 
 export const get${pascalName}ById: RequestHandler = async (req, res, next) => {
   try {
-    const result = await ${lowerName}Service.get${pascalName}ById(req.params.id);
+    const result = await ${moduleName}Service.get${pascalName}ById(req.params.id);
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -140,7 +140,7 @@ export const get${pascalName}ById: RequestHandler = async (req, res, next) => {
 
 export const update${pascalName}: RequestHandler = async (req, res, next) => {
   try {
-    const result = await ${lowerName}Service.update${pascalName}(req.params.id, req.body);
+    const result = await ${moduleName}Service.update${pascalName}(req.params.id, req.body);
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -149,7 +149,7 @@ export const update${pascalName}: RequestHandler = async (req, res, next) => {
 
 export const delete${pascalName}: RequestHandler = async (req, res, next) => {
   try {
-    const result = await ${lowerName}Service.delete${pascalName}(req.params.id);
+    const result = await ${moduleName}Service.delete${pascalName}(req.params.id);
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -158,21 +158,21 @@ export const delete${pascalName}: RequestHandler = async (req, res, next) => {
 `,
 
   route: `import express from 'express';
-import * as ${lowerName}Controller from './${lowerName}.controller';
+import * as ${moduleName}Controller from './${moduleName}.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
-import { ${pascalName}Validation } from './${lowerName}.validation';
+import { ${pascalName}Validation } from './${moduleName}.validation';
 
 const router = express.Router();
 
 router.post(
   '/',
   validateRequest(${pascalName}Validation.create${pascalName}ZodSchema),
-  ${lowerName}Controller.create${pascalName}
+  ${moduleName}Controller.create${pascalName}
 );
-router.get('/', ${lowerName}Controller.get${pascalName}s);
-router.get('/:id', ${lowerName}Controller.get${pascalName}ById);
-router.put('/:id', ${lowerName}Controller.update${pascalName});
-router.delete('/:id', ${lowerName}Controller.delete${pascalName});
+router.get('/', ${moduleName}Controller.get${pascalName}s);
+router.get('/:id', ${moduleName}Controller.get${pascalName}ById);
+router.put('/:id', ${moduleName}Controller.update${pascalName});
+router.delete('/:id', ${moduleName}Controller.delete${pascalName});
 
 export default router;
 `,
@@ -193,13 +193,13 @@ export const ${pascalName}Validation = {
 };
 `,
 
-  utils: `// Utility functions for ${lowerName}
+  utils: `// Utility functions for ${moduleName}
 `,
 };
 
 // Write files
 Object.entries(templates).forEach(([type, content]) => {
-  const filePath = path.join(baseDir, `${lowerName}.${type}.ts`);
+  const filePath = path.join(baseDir, `${moduleName}.${type}.ts`);
   if (fs.existsSync(filePath)) {
     console.log(`⚠️  Skipping ${filePath} (already exists)`);
     return;
@@ -207,4 +207,4 @@ Object.entries(templates).forEach(([type, content]) => {
   fs.writeFileSync(filePath, content, 'utf8');
 });
 
-console.log(`✅ '${lowerName}' module created with full boilerplate.`);
+console.log(`✅ '${moduleName}' module created with full boilerplate.`);
