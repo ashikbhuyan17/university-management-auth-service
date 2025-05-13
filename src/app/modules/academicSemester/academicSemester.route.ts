@@ -1,18 +1,18 @@
 import express from 'express'
-import * as academicSemesterController from './academicSemester.controller'
 import { AcademicSemesterValidation } from './academicSemester.validation'
 import validateRequest from '../../middlewares/validateRequest'
+import { AcademicSemesterController } from './academicSemester.controller'
 
 const router = express.Router()
 
 router.post(
-  '/',
+  '/create-semester',
   validateRequest(AcademicSemesterValidation.createAcademicSemesterZodSchema),
-  academicSemesterController.createAcademicSemester
+  AcademicSemesterController.createAcademicSemester
 )
-router.get('/', academicSemesterController.getAcademicSemesters)
-router.get('/:id', academicSemesterController.getAcademicSemesterById)
-router.put('/:id', academicSemesterController.updateAcademicSemester)
-router.delete('/:id', academicSemesterController.deleteAcademicSemester)
+router.get('/', AcademicSemesterController.getAcademicSemesters)
+router.get('/:id', AcademicSemesterController.getAcademicSemesterById)
+router.put('/:id', AcademicSemesterController.updateAcademicSemester)
+router.delete('/:id', AcademicSemesterController.deleteAcademicSemester)
 
-export default router
+export const AcademicSemesterRoutes = router

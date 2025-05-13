@@ -1,47 +1,64 @@
-import { RequestHandler } from 'express';
-import * as academicSemesterService from './academicSemester.service';
+import { RequestHandler } from 'express'
+import { AcademicSemesterService } from './academicSemester.service'
 
-export const createAcademicSemester: RequestHandler = async (req, res, next) => {
+const createAcademicSemester: RequestHandler = async (req, res, next) => {
   try {
-    const result = await academicSemesterService.createAcademicSemester(req.body);
-    res.status(201).json({ success: true, data: result });
+    const { ...academicSemesterData } = req.body
+    const result = await AcademicSemesterService.createAcademicSemester(
+      academicSemesterData
+    )
+    res.status(201).json({ success: true, data: result })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
-export const getAcademicSemesters: RequestHandler = async (req, res, next) => {
+const getAcademicSemesters: RequestHandler = async (req, res, next) => {
   try {
-    const result = await academicSemesterService.getAcademicSemesters();
-    res.status(200).json({ success: true, data: result });
+    const result = await AcademicSemesterService.getAcademicSemesters()
+    res.status(200).json({ success: true, data: result })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
-export const getAcademicSemesterById: RequestHandler = async (req, res, next) => {
+const getAcademicSemesterById: RequestHandler = async (req, res, next) => {
+  const id = req.params.id
   try {
-    const result = await academicSemesterService.getAcademicSemesterById(req.params.id);
-    res.status(200).json({ success: true, data: result });
+    const result = await AcademicSemesterService.getAcademicSemesterById(id)
+    res.status(200).json({ success: true, data: result })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
-export const updateAcademicSemester: RequestHandler = async (req, res, next) => {
+const updateAcademicSemester: RequestHandler = async (req, res, next) => {
   try {
-    const result = await academicSemesterService.updateAcademicSemester(req.params.id, req.body);
-    res.status(200).json({ success: true, data: result });
+    const result = await AcademicSemesterService.updateAcademicSemester(
+      req.params.id,
+      req.body
+    )
+    res.status(200).json({ success: true, data: result })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
-export const deleteAcademicSemester: RequestHandler = async (req, res, next) => {
+const deleteAcademicSemester: RequestHandler = async (req, res, next) => {
   try {
-    const result = await academicSemesterService.deleteAcademicSemester(req.params.id);
-    res.status(200).json({ success: true, data: result });
+    const result = await AcademicSemesterService.deleteAcademicSemester(
+      req.params.id
+    )
+    res.status(200).json({ success: true, data: result })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
+
+export const AcademicSemesterController = {
+  createAcademicSemester,
+  getAcademicSemesters,
+  getAcademicSemesterById,
+  updateAcademicSemester,
+  deleteAcademicSemester,
+}
