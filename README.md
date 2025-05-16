@@ -1,63 +1,98 @@
-npm init -y
-yarn add -D typescript 
-tsc --init 
-yarn add -D  @types/express
-yarn add -D @types/cors
-yarn add -D ts-node-dev
-yarn add dotenv
-yarn add  cors
-yarn add express mongoose
+# University Management System Authentication Service
 
-for setup eslint  prettier (https://blog.logrocket.com/linting-typescript-eslint-prettier/)
- npm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
-yarn add -D prettier
-yarn add -D eslint-config-prettier
-{
-    "semi": false, // Specify if you want to print semicolons at the end of statements
-    "singleQuote": true, // If you want to use single quotes
-    "arrowParens": "avoid", // Include parenthesis around a sole arrow function parameter
-  }
+This is the documentation for the Authentication Service component of the University Management System. The Authentication Service provides authentication and authorization functionalities for the three main roles in the system: Admin, Student, and Faculty. It is built using TypeScript, Express.js, Zod validation, and MongoDB.
 
+## Functional Requirements
 
-  husky=> ami jody kono kichu fixed korte vhule jai bhe bhul code or code format bhul vabey push kore dey tokon husky push korar agey eslint and prettier check kore and sob tik takle push kore 
+### Student
 
-  ami jokon push korbo tkn husky dayotho hbe eslint and format check kora thn push kora and error asle push hbe na , push cancel hoiye jabe 
-  yarn add husky --dev
-  yarn husky install
-  yarn husky add .husky/pre-commit "npm test"
-  yarn dlx husky-init --yarn2 && yarn
+- Student can login and log out.
+- Student can manage and update their profile.
+- Student can update certain fields.
 
+### Admin
 
-lint-staged => shudhu stagging file gulu ke lint korbe 
-yarn add -D lint-staged
+- Admin can log in and log out.
+- Admin can manage and update their profile.
+- Admin can only update certain fields.
+- Admin can manage user accounts:
+  - Change Password
 
+### Faculty
 
-http://localhost:5000/api/v1/users/create-user
-{
-    "user":{
-        "role":"admin"
-    }
-}
-http://localhost:5000/api/v1/users/list
+- Faculty can log in and log out.
+- Faculty can manage and update their profile.
+- Faculty can only update certain fields.
 
+## API Endpoints
 
-📝 Logger কি ও কেন দরকার (Express JS)
-Logger হলো এমন একটি টুল যা অ্যাপের ভেতরে কী কী হচ্ছে (যেমন: রিকোয়েস্ট, রেসপন্স, এরর) — সেগুলো ট্র্যাক ও রেকর্ড করে।
+### User
 
-কেন দরকার?
-🐞 বাগ খোঁজার জন্য (Debug)
+- `POST /users/create-student`
+- `POST /users/create-faculty`
+- `POST /users/create-admin`
 
-📊 অ্যাপ মনিটর করার জন্য – কোন API কতবার কল হচ্ছে, ইউজার কী করছে — এসব দেখা যায়।
+### Student
 
-📁 প্রোডাকশন লগ রাখার জন্য – অ্যাপ লাইভ হলে কোন সমস্যা হচ্ছে, সেটা জানার একমাত্র উপায় হলো লগ।
+- `GET /students`
+- `GET /students?searchTerm=fr797`
+- `GET /students?page=1&limit=10&sortBy=gender&sortOrder=asc`
+- `GET /students/:id`
+- `PATCH /students/:id`
+- `DELETE /students/:id`
 
-সাধারণ Logger Tools:
-morgan → HTTP request log করার জন্য
+### Faculty
 
-winston → কাস্টম লগ ও ফাইল লগ করার জন্য
+- `GET /faculties`
+- `GET /faculties?searchTerm=john`
+- `GET /faculties?page=1&limit=10&sortBy=gender&sortOrder=asc`
+- `GET /faculties/:id`
+- `PATCH /faculties/:id`
+- `DELETE /faculties/:id`
 
+### Admin
 
+- `GET /admins`
+- `GET /admins?searchTerm=us88`
+- `GET /admins?page=1&limit=10&sortBy=gender&sortOrder=asc`
+- `GET /admins/:id`
+- `PATCH /admins/:id`
+- `DELETE /admins/:id`
 
-<!-- CLI to generate module boilerplate
-yarn run generate:module students
- -->
+### Academic Semester
+
+- `POST /academic-semesters/create-semester`
+- `GET /academic-semesters`
+- `GET /academic-semesters?searchTerm=fal`
+- `GET /academic-semesters?page=1&limit=10&sortBy=year&sortOrder=asc`
+- `GET /academic-semesters/:id`
+- `PATCH /academic-semesters/:id`
+- `DELETE /academic-semesters/:id`
+
+### Academic Department
+
+- `POST /academic-departments/create-department`
+- `GET /academic-departments`
+- `GET /academic-departments?searchTerm=math`
+- `GET /academic-departments?page=1&limit=10&sortBy=title&sortOrder=asc`
+- `GET /academic-departments/:id`
+- `PATCH /academic-departments/:id`
+- `DELETE /academic-departments/:id`
+
+### Academic Faculty
+
+- `POST /academic-faculties/create-faculty`
+- `GET /academic-faculties`
+- `GET /academic-faculties?searchTerm=com`
+- `GET /academic-faculties?page=1&limit=10&sortBy=title&sortOrder=asc`
+- `GET /academic-faculties/:id`
+- `PATCH /academic-faculties/:id`
+- `DELETE /academic-faculties/:id`
+
+### Authentication
+
+- `POST /auth/login`
+- `POST /auth/change-password`
+- `POST /auth/refresh-token`
+
+Postman Documenttaion: [Click Here](https://documenter.getpostman.com/view/26682150/2s93zB72V9#acc25f08-de78-478b-809d-837ce239d2b3)
