@@ -1,3 +1,4 @@
+import httpStatus from 'http-status'
 import { Schema, model } from 'mongoose'
 import {
   IAcademicSemester,
@@ -8,6 +9,7 @@ import {
   academicSemesterMonths,
   academicSemesterTitles,
 } from './academicSemester.constant'
+import ApiError from '../../../errors/ApiError'
 
 const academicSemesterSchema = new Schema<IAcademicSemester>(
   {
@@ -23,6 +25,25 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
   },
   { timestamps: true }
 )
+
+// pre('save') => যখনই নতুন ডেটা save() করার চেষ্টা করা হবে, তার আগেই এই Mongoose middleware ফাংশনটা এক্সিকিউট হবে।
+academicSemesterSchema.pre('save', async function (next) {
+  const isExist = await AcademicSemester.findOne({
+    title: this.title,
+    year: this.year,
+  })
+  // ডেটাবেইসে চেক করে একই title ও year  কোনো সেমিস্টার আগে থেকেই আছে কিনা
+
+  if (isExist) {
+    // যদি একই title ও year সহ সেমিস্টার পাওয়া যায়
+    throw new ApiError(
+      httpStatus.CONFLICT,
+      'Academic semester is already exist !'
+    )
+  }
+
+  next()
+})
 
 export const AcademicSemester = model<IAcademicSemester, AcademicSemesterModel>(
   'AcademicSemester',

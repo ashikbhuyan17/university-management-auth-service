@@ -1,26 +1,64 @@
+import httpStatus from 'http-status'
 import { RequestHandler } from 'express'
 import { AcademicSemesterService } from './academicSemester.service'
+import catchAsync from '../../../shared/catchAsync'
+import sendResponse from '../../../shared/sendResponse'
+import { IAcademicSemester } from './academicSemester.interface'
+import pick from '../../../shared/pick'
+import { paginationFields } from '../../../constants/pagination'
 
-const createAcademicSemester: RequestHandler = async (req, res, next) => {
-  try {
-    const { ...academicSemesterData } = req.body
-    const result = await AcademicSemesterService.createAcademicSemester(
-      academicSemesterData
+// const createAcademicSemester: RequestHandler = async (req, res, next) => {
+//   try {
+//     const { ...academicSemesterData } = req.body
+//     const result = await AcademicSemesterService.createAcademicSemester(
+//       academicSemesterData
+//     )
+//     res.status(201).json({ success: true, data: result })
+//   } catch (error) {
+//     next(error)
+//   }
+// }
+
+// catchAsync high order function that return another fn, and catchAsync resolve tryCatch repeat task
+const createAcademicSemester = catchAsync(async (req, res) => {
+  const { ...academicSemesterData } = req.body
+  // ক্লায়েন্ট থেকে পাওয়া ডেটা (req.body) কে academicSemesterData নামে একটি নতুন অবজেক্টে কপি করা হয়েছে
+  const result = await AcademicSemesterService.createAcademicSemester(
+    academicSemesterData
+  )
+  // res.status(201).json({ success: true, data: result })
+
+  sendResponse<IAcademicSemester>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Academic Semester fetched successfully !',
+    data: result,
+  })
+})
+
+const getAcademicSemesters: RequestHandler = catchAsync(
+  async (req, res, next) => {
+    // const paginationOption = {
+    //   page: Number(req.query.page),
+    //   limit: Number(req.query.limit),
+    //   sortBy: req.query.sortBy,
+    //   sortOrder: req.query.sortOrder,
+    // }
+    const paginationOptions = pick(req.query, paginationFields)
+    console.log('🚀 ~ paginationOptions:', paginationOptions)
+
+    const result = await AcademicSemesterService.getAcademicSemesters(
+      paginationOptions
     )
-    res.status(201).json({ success: true, data: result })
-  } catch (error) {
-    next(error)
+    sendResponse<IAcademicSemester[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic Semesters retrieved successfully !',
+      meta: result.meta,
+      data: result.data,
+    })
   }
-}
-
-const getAcademicSemesters: RequestHandler = async (req, res, next) => {
-  try {
-    const result = await AcademicSemesterService.getAcademicSemesters()
-    res.status(200).json({ success: true, data: result })
-  } catch (error) {
-    next(error)
-  }
-}
+)
 
 const getAcademicSemesterById: RequestHandler = async (req, res, next) => {
   const id = req.params.id
