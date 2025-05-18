@@ -44,10 +44,12 @@ const getAcademicSemesters: RequestHandler = catchAsync(
     //   sortBy: req.query.sortBy,
     //   sortOrder: req.query.sortOrder,
     // }
+    const filters = pick(req.query, ['searchTerm'])
+    console.log('🚀 ~ filter:', filters)
     const paginationOptions = pick(req.query, paginationFields)
-    console.log('🚀 ~ paginationOptions:', paginationOptions)
 
     const result = await AcademicSemesterService.getAcademicSemesters(
+      filters,
       paginationOptions
     )
     sendResponse<IAcademicSemester[]>(res, {
