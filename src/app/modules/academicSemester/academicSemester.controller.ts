@@ -38,15 +38,22 @@ const createAcademicSemester = catchAsync(async (req, res) => {
 
 const getAcademicSemesters: RequestHandler = catchAsync(
   async (req, res, next) => {
-    // const paginationOption = {
-    //   page: Number(req.query.page),
-    //   limit: Number(req.query.limit),
-    //   sortBy: req.query.sortBy,
-    //   sortOrder: req.query.sortOrder,
-    // }
+    /* 
+    const paginationOption = {
+      page: Number(req.query.page),
+      limit: Number(req.query.limit),
+      sortBy: req.query.sortBy,
+      sortOrder: req.query.sortOrder,
+    }
+      pick korar reason hocce sortOrder, sortBy, page, limit sobgula diteo pare abr na dite dte pare 
+      tay etake dynamic vabe pick kora hocce jathe same format e thake
+    
+    */
+
     const filters = pick(req.query, ['searchTerm'])
     console.log('🚀 ~ filter:', filters)
     const paginationOptions = pick(req.query, paginationFields)
+    console.log('🚀 ~ paginationOptions:', paginationOptions)
 
     const result = await AcademicSemesterService.getAcademicSemesters(
       filters,

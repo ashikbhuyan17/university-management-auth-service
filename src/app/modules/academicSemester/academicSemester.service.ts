@@ -1,6 +1,9 @@
 import httpStatus from 'http-status'
 import ApiError from '../../../errors/ApiError'
-import { academicSemesterTitleCodeMapper } from './academicSemester.constant'
+import {
+  academicSemesterSearchableFields,
+  academicSemesterTitleCodeMapper,
+} from './academicSemester.constant'
 import {
   IAcademicSemester,
   IAcademicSemesterFilters,
@@ -29,19 +32,6 @@ const getAcademicSemesters = async (
 ): Promise<IGenericResponse<IAcademicSemester[]>> => {
   // Extract searchTerm to implement search query
   const { searchTerm, ...filtersData } = filters
-  const andConditions = []
-  if (searchTerm) {
-    andConditions.push([
-      {
-        $or: [
-          {
-            //  $options: 'i' => case sensitive and matching
-            title: { $regex: searchTerm, $options: 'i' },
-          },
-        ],
-      },
-    ])
-  }
 
   // ?page=1&limit=2&sortBy=code&sortOrder=asc
   // const { page = 1, limit = 10 } = paginationOptions
@@ -49,9 +39,39 @@ const getAcademicSemesters = async (
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions) //dynamic and reused
 
+  const andConditions = []
+  // Search needs $or for searching in specified fields
+  if (searchTerm) {
+    /*
+      andConditions.push({
+        $or: [
+          {
+            //  $options: 'i' => case sensitive and matching
+            title: { $regex: searchTerm, $options: 'i' },
+            code: { $regex: searchTerm, $options: 'i' },
+            year: { $regex: searchTerm, $options: 'i' },
+          },
+        ],
+      })
+      dynamic vabe search kora hocce and conditions er moddhe
+      academicSemesterSearchableFields er moddhe jekono ekta field e searchTerm thakle  
+      seita match korbe
+      jemon: title, code, year
+      
+    */
+
+    andConditions.push({
+      // accept any  searchTerm which we are set in academicSemesterSearchableFields
+      $or: academicSemesterSearchableFields.map(field => ({
+        [field]: { $regex: searchTerm, $options: 'i' },
+      })),
+    })
+  }
+
+  // Dynamic  Sort needs  field to  do sorting
   const sortConditions: { [key: string]: SortOrder } = {} //createdAt will be desc order
   if (sortBy && sortOrder) {
-    sortConditions[sortBy] = sortOrder
+    sortConditions[sortBy] = sortOrder // sortBy: 'createdAt', sortOrder: 'desc'
   }
 
   const whereConditions =

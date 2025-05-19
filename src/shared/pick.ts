@@ -24,7 +24,7 @@ const pick = <T extends Record<string, unknown>, k extends keyof T>(
     }
   }
 
-  return finalObj // শেষের রেজাল্ট রিটার্ন
+  return finalObj // শেষের রেজাল্ট রিটার্ন  { page: '1', limit: '10' }
 }
 
 export default pick
