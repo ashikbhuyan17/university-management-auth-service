@@ -50,10 +50,14 @@ const getAcademicSemesters: RequestHandler = catchAsync(
     
     */
 
-    const filters = pick(req.query, ['searchTerm'])
-    console.log('🚀 ~ filter:', filters)
+    const filters = pick(req.query, [
+      'searchTerm',
+      'title',
+      'code',
+      'year',
+      'syncId',
+    ])
     const paginationOptions = pick(req.query, paginationFields)
-    console.log('🚀 ~ paginationOptions:', paginationOptions)
 
     const result = await AcademicSemesterService.getAcademicSemesters(
       filters,

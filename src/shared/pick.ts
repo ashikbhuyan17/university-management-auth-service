@@ -14,7 +14,6 @@ const pick = <T extends Record<string, unknown>, k extends keyof T>(
   obj: T,
   keys: k[]
 ): Partial<T> => {
-  console.log('🚀 ~ obj:', obj)
   const finalObj: Partial<T> = {} // নতুন অবজেক্ট যেখানে নির্দিষ্ট key গুলো থাকবে
 
   for (const key of keys) {

@@ -18,7 +18,6 @@ import { SortOrder } from 'mongoose'
 const createAcademicSemester = async (
   payload: IAcademicSemester
 ): Promise<IAcademicSemester> => {
-  console.log('🚀 ~ payload:', payload)
   if (academicSemesterTitleCodeMapper[payload.title] !== payload.code) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid Semester Code')
   }
@@ -39,9 +38,10 @@ const getAcademicSemesters = async (
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions) //dynamic and reused
 
-  const andConditions = []
+  const andConditions = [] //implicit and $and
   // Search needs $or for searching in specified fields
   if (searchTerm) {
+    //partial match
     /*
       andConditions.push({
         $or: [
@@ -65,6 +65,20 @@ const getAcademicSemesters = async (
       $or: academicSemesterSearchableFields.map(field => ({
         [field]: { $regex: searchTerm, $options: 'i' },
       })),
+    })
+  }
+
+  /*
+    Filter = exact match
+    Filter needs $and for filtering in specified fields
+  */
+
+  if (Object.keys(filtersData).length) {
+    andConditions.push({
+      $and: Object.entries(filtersData).map(([key, value]) => ({
+        [key]: value,
+      })),
+      // $and: [{ title: filtersData.title }, { year: filtersData.year }],
     })
   }
 
