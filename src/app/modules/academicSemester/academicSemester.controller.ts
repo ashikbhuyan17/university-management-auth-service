@@ -77,7 +77,16 @@ const getAcademicSemesterById: RequestHandler = async (req, res, next) => {
   const id = req.params.id
   try {
     const result = await AcademicSemesterService.getAcademicSemesterById(id)
-    res.status(200).json({ success: true, data: result })
+    console.log(
+      '🚀 ~ constgetAcademicSemesterById:RequestHandler= ~ result:',
+      result
+    )
+    sendResponse<IAcademicSemester>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic Semester fetched successfully !',
+      data: result,
+    })
   } catch (error) {
     next(error)
   }

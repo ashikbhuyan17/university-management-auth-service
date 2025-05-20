@@ -110,12 +110,13 @@ const getAcademicSemesters = async (
 const getAcademicSemesterById = async (
   id: string
 ): Promise<IAcademicSemester | null> => {
-  return AcademicSemester.findById(id, {
+  const result = await AcademicSemester.findById(id, {
     _id: 0,
     __v: 0,
     createdAt: 0,
     updatedAt: 0,
   })
+  return result
 }
 
 const updateAcademicSemester = async (
