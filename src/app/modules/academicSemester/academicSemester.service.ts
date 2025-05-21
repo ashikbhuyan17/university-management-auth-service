@@ -123,7 +123,15 @@ const updateAcademicSemester = async (
   id: string,
   payload: Partial<IAcademicSemester>
 ): Promise<IAcademicSemester | null> => {
-  return AcademicSemester.findByIdAndUpdate(id, payload, { new: true })
+  if (
+    payload.title &&
+    payload.code &&
+    academicSemesterTitleCodeMapper[payload.title] !== payload.code
+  ) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid Semester Code')
+  }
+  // return AcademicSemester.findByIdAndUpdate(id, payload, { new: true })
+  return AcademicSemester.findOneAndUpdate({ _id: id }, payload, { new: true })
 }
 
 const deleteAcademicSemester = async (

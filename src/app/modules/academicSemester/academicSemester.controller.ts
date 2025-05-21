@@ -77,10 +77,6 @@ const getAcademicSemesterById: RequestHandler = async (req, res, next) => {
   const id = req.params.id
   try {
     const result = await AcademicSemesterService.getAcademicSemesterById(id)
-    console.log(
-      '🚀 ~ constgetAcademicSemesterById:RequestHandler= ~ result:',
-      result
-    )
     sendResponse<IAcademicSemester>(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -98,7 +94,12 @@ const updateAcademicSemester: RequestHandler = async (req, res, next) => {
       req.params.id,
       req.body
     )
-    res.status(200).json({ success: true, data: result })
+    sendResponse<IAcademicSemester>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic Semester updated successfully !',
+      data: result,
+    })
   } catch (error) {
     next(error)
   }
@@ -106,10 +107,14 @@ const updateAcademicSemester: RequestHandler = async (req, res, next) => {
 
 const deleteAcademicSemester: RequestHandler = async (req, res, next) => {
   try {
-    const result = await AcademicSemesterService.deleteAcademicSemester(
-      req.params.id
-    )
-    res.status(200).json({ success: true, data: result })
+    const { id } = req.body
+    const result = await AcademicSemesterService.deleteAcademicSemester(id)
+    sendResponse<IAcademicSemester>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic Semester deleted successfully !',
+      data: result,
+    })
   } catch (error) {
     next(error)
   }
