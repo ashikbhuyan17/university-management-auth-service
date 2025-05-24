@@ -19,6 +19,10 @@ const userSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
+    toJSON: {
+      // Convert to JSON format for multiple data operations
+      virtuals: true,
+    },
   }
 )
 export const User = model<IUser, UserModel>('User', userSchema)

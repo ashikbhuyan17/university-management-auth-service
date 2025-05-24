@@ -23,7 +23,13 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
     startMonth: { type: String, required: true, enum: academicSemesterMonths },
     endMonth: { type: String, required: true, enum: academicSemesterMonths },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      // Convert to JSON format for multiple data operations
+      virtuals: true,
+    },
+  }
 )
 
 // pre('save') => যখনই নতুন ডেটা save() করার চেষ্টা করা হবে, তার আগেই এই Mongoose middleware ফাংশনটা এক্সিকিউট হবে।

@@ -1,9 +1,9 @@
 import { academicFacultySearchableFields } from './academicFaculty.constants'
-import { IAcademicFaculty } from './academicFaculty.interface'
+import {
+  IAcademicFaculty,
+  IAcademicFacultyFilters,
+} from './academicFaculty.interface'
 import { AcademicFaculty } from './academicFaculty.model'
-export type IAcademicFacultyFilter = {
-  searchTerm?: string
-}
 
 const createAcademicFaculty = async (
   data: IAcademicFaculty
@@ -13,7 +13,7 @@ const createAcademicFaculty = async (
 }
 
 const getAcademicFaculty = async (
-  filters: IAcademicFacultyFilter
+  filters: IAcademicFacultyFilters
 ): Promise<IAcademicFaculty[]> => {
   const { searchTerm, ...filtersData } = filters
   const andConditions = []
