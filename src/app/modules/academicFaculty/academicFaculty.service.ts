@@ -1,5 +1,9 @@
+import { academicFacultySearchableFields } from './academicFaculty.constants'
 import { IAcademicFaculty } from './academicFaculty.interface'
 import { AcademicFaculty } from './academicFaculty.model'
+export type IAcademicFacultyFilter = {
+  searchTerm?: string
+}
 
 const createAcademicFaculty = async (
   data: IAcademicFaculty
@@ -8,8 +12,31 @@ const createAcademicFaculty = async (
   return result
 }
 
-const getAcademicFaculty = async (): Promise<IAcademicFaculty[]> => {
-  return AcademicFaculty.find()
+const getAcademicFaculty = async (
+  filters: IAcademicFacultyFilter
+): Promise<IAcademicFaculty[]> => {
+  const { searchTerm, ...filtersData } = filters
+  const andConditions = []
+  if (searchTerm) {
+    andConditions.push({
+      $or: academicFacultySearchableFields.map(field => ({
+        [field]: { $regex: searchTerm, $options: 'i' },
+      })),
+    })
+  }
+
+  if (Object.keys(filtersData).length) {
+    andConditions.push({
+      $and: Object.entries(filtersData).map(([key, value]) => ({
+        [key]: value,
+      })),
+    })
+  }
+  // If there is no condition , put {} to give all data
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {}
+
+  return AcademicFaculty.find(whereConditions)
 }
 
 const getAcademicFacultyById = async (

@@ -29,6 +29,7 @@ import ApiError from '../../errors/ApiError'
 import { ZodError } from 'zod'
 import handleZodError from '../../errors/handleZodError'
 import handleCastError from '../../errors/handleCastError'
+import handleMongoServerError from '../../errors/handleMongoServerError'
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   config.env === 'development'
     ? console.log(`🐱‍🏍 globalErrorHandler ~~`, error)
@@ -75,7 +76,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
       for example, duplicate key error or other database-level errors.
       so we handle this error to respond with proper message and status code
     */
-    const simplifiedError = handleValidationError(error)
+    const simplifiedError = handleMongoServerError(error)
     statusCode = simplifiedError.statusCode
     message = simplifiedError.message
     errorMessages = simplifiedError.errorMessages

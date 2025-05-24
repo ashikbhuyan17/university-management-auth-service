@@ -7,7 +7,7 @@ import validateRequest from '../../middlewares/validateRequest'
 const router = express.Router()
 
 router.post(
-  '/',
+  '/create-faculty',
   validateRequest(AcademicFacultyValidation.createAcademicFacultyZodSchema),
   AcademicFacultyController.createAcademicFaculty
 )
