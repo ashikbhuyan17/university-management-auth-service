@@ -1,12 +1,17 @@
+import httpStatus from 'http-status'
 import { RequestHandler } from 'express'
 import { UserService } from './user.service'
+import sendResponse from '../../../shared/sendResponse'
+import { IUser } from './user.interface'
 const createUser: RequestHandler = async (req, res, next) => {
   try {
-    const { user } = req.body
-    const result = await UserService.createUser(user)
-    res.status(200).json({
+    const { ...userData } = req.body
+    const result = await UserService.createUser(userData)
+
+    sendResponse<IUser>(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'user created successfully!',
+      message: 'Student created successfully!',
       data: result,
     })
   } catch (err) {
