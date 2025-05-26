@@ -1,12 +1,13 @@
+import { createStudents } from './../students/students.controller'
 import httpStatus from 'http-status'
 import { RequestHandler } from 'express'
 import { UserService } from './user.service'
 import sendResponse from '../../../shared/sendResponse'
 import { IUser } from './user.interface'
-const createUser: RequestHandler = async (req, res, next) => {
+const createStudent: RequestHandler = async (req, res, next) => {
   try {
-    const { ...userData } = req.body
-    const result = await UserService.createUser(userData)
+    const { student, ...userData } = req.body
+    const result = await UserService.createStudent(student, userData)
 
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
@@ -31,6 +32,6 @@ const getUser = async (req, res) => {
 }
 
 export const UserController = {
-  createUser,
+  createStudent,
   getUser,
 }

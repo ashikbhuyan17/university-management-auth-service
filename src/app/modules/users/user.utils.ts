@@ -20,13 +20,16 @@ export const findLastStudentId = async () => {
 // }
 
 export const generateStudentId = async (
-  academicSemester: IAcademicSemester
+  academicSemester: IAcademicSemester | null
 ): Promise<string> => {
   const currentId =
     (await findLastStudentId()) || (0).toString().padStart(5, '0') //00000
   //increment by 1
   let incrementedId = (parseInt(currentId) + 1).toString().padStart(5, '0')
   //20 25
+  if (!academicSemester) {
+    throw new Error('Academic semester is required to generate student ID')
+  }
   incrementedId = `${academicSemester.year.substring(2)}${
     academicSemester.code
   }${incrementedId}`

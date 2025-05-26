@@ -7,9 +7,9 @@ const router = express.Router()
 router.get('/list', UserController.getUser)
 
 router.post(
-  '/create-user',
-  validateRequest(UserValidation.createUserZodSchema), // this is zod validation, jeta mongoose age aro ekbar validation check dewa for security parpas
-  UserController.createUser
+  '/create-student',
+  validateRequest(UserValidation.createStudentZodSchema), // this is zod validation, jeta mongoose age aro ekbar validation check dewa for security parpas
+  UserController.createStudent
 )
 
 export const UserRoutes = router

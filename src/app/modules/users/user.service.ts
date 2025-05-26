@@ -1,22 +1,33 @@
 import config from '../../../config/index'
 import ApiError from '../../../errors/ApiError'
+import { AcademicSemester } from '../academicSemester/academicSemester.model'
+import { IStudent } from '../student/student.interface'
 import { IUser } from './user.interface'
 import { User } from './user.model'
 import { generateFacultyId, generateStudentId } from './user.utils'
 
-const createUser = async (user: IUser): Promise<IUser | null> => {
-  // auto generated incremental id
-  const academicsemester = {
-    year: '2025',
-    code: '01',
-  }
+const createStudent = async (
+  student: IStudent,
+  user: IUser
+): Promise<IUser | null> => {
   // const id = await generateStudentId(academicsemester)
-  const id = await generateFacultyId()
-  user.id = id
+
   // default password
   if (!user.password) {
-    user.password = config.default_user_pass as string //type alias , je ami sure eta string hbe
+    user.password = config.default_student_pass as string //type alias , je ami sure eta string hbe
   }
+  // set role
+  user.role = 'student'
+
+  // set student id generate by academic semester
+  const academicSemester = await AcademicSemester.findById(
+    student.academicSemester // Reference to AcademicSemester -> _id
+  ).lean()
+
+
+  //generate student id
+  const id = await generateStudentId(academicSemester)
+
 
   const createdUser = await User.create(user)
 
@@ -31,6 +42,6 @@ const getUser = async (): Promise<IUser[] | null> => {
   return userList
 }
 export const UserService = {
-  createUser,
+  createStudent,
   getUser,
 }
