@@ -113,3 +113,23 @@ off kore thn process take off kore dew cz amra jni node js ekta process
 13-5: How to organize your zod validation
 mongoose e to validation korbey amra cachi tar age zod diye validation korte 
 tay route e validation check korbo 
+
+
+
+
+15-9: Create User-Student using Transaction and Rollback
+Mongoose-এ transaction এবং rollback মূলত MongoDB-এর multi-document ACID (Atomicity, Consistency, Isolation, Durability) properties নিশ্চিত করতে ব্যবহৃত হয়। 
+Transaction কী?
+Transaction এর মাধ্যমে একাধিক ডাটাবেইস অপারেশন একসাথে execute হয়, এবং সবগুলো সফল হলে তবেই ডাটাবেজে স্থায়ীভাবে save হয়।
+
+যদি কোনো একটি অপারেশন fail করে, তাহলে সবকিছু rollback হয়ে যায় — অর্থাৎ, কোনো ডেটা চেঞ্জই হয় না।
+
+উদাহরণ: ধরো তুমি একজন ইউজারকে create করছো এবং তার account-এর জন্য একটা balance সেট করছো। ইউজার তৈরি হলেও 
+যদি balance সেট করতে গিয়ে error হয়, তাহলে পুরো process টা undo হয়ে যাবে — যাতে inconsistent ডেটা না থাকে।
+
+
+Rollback কী?
+Rollback মানে হল পূর্ববর্তী অবস্থায় ফিরে যাওয়া। অর্থাৎ, যদি transaction-এর মাঝখানে কোনো সমস্যা হয়, তাহলে আগের যেই সব কাজ হয়েছিল, সেগুলোকেও undo করে ফেলা হয়।
+
+
+check the docs => https://ashik17.hashnode.dev/mongodb-transaction-rollback

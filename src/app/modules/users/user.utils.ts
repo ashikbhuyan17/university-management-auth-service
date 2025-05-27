@@ -20,6 +20,7 @@ export const findLastStudentId = async () => {
 // }
 
 export const generateStudentId = async (
+  //250100001   => 25 = year, 01 = semester code, 00001 = incremented id
   academicSemester: IAcademicSemester | null
 ): Promise<string> => {
   const currentId =
@@ -49,6 +50,7 @@ export const findLastFacultyId = async (): Promise<string | undefined> => {
 }
 
 export const generateFacultyId = async (): Promise<string> => {
+  // F-00001 => F = faculty, 00001 = incremented id
   const currentId =
     (await findLastFacultyId()) || (0).toString().padStart(5, '0')
   let incrementedId = (parseInt(currentId) + 1).toString().padStart(5, '0')

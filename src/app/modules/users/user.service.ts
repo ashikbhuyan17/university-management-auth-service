@@ -1,3 +1,6 @@
+import httpStatus from 'http-status'
+import { createStudents } from './../students/students.service'
+import mongoose from 'mongoose'
 import config from '../../../config/index'
 import ApiError from '../../../errors/ApiError'
 import { AcademicSemester } from '../academicSemester/academicSemester.model'
@@ -5,7 +8,22 @@ import { IStudent } from '../student/student.interface'
 import { IUser } from './user.interface'
 import { User } from './user.model'
 import { generateFacultyId, generateStudentId } from './user.utils'
+import { Student } from '../student/student.model'
 
+/**
+ * project overview:
+ => ey project e user type ache, user type er moddhe student, faculty, admin and sobgula ke user model e store kora hobe.
+  user model er moddhe sobgula user er id thakbe, jemon student er id, faculty er id, admin er id.
+ scenario:
+ payload : { password: '123',student: { ... } }  => {student,...userData}
+  1. Create a student 
+  2. Generate student id using academic semester
+  3. Set default password if not provided
+  4. Set role as student
+  5. Create student and user in a transaction
+
+ * This service handles user-related operations such as creating students and get student  _id then use _id  reference in user model.
+ */
 const createStudent = async (
   student: IStudent,
   user: IUser
@@ -24,10 +42,39 @@ const createStudent = async (
     student.academicSemester // Reference to AcademicSemester -> _id
   ).lean()
 
+  // using Transaction and Rollback check => https://ashik17.hashnode.dev/mongodb-transaction-rollback
 
-  //generate student id
-  const id = await generateStudentId(academicSemester)
+  const session = await mongoose.startSession() // Session start
+  try {
+    session.startTransaction() // Start transaction
 
+    //generate student id
+    const id = await generateStudentId(academicSemester)
+    // user and student id same in database
+    user.id = id // set user id
+    student.id = id // set student id
+
+    //its returns a array of student
+    const newStudent = await Student.create([student], { session }) // create student
+    if (!newStudent.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create student')
+    }
+
+    user.student = newStudent[0]._id // set student _id into user.student
+    const newUser = await User.create([user], { session }) // create user
+    if (!newUser.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user')
+    }
+    await session.commitTransaction() // Commit transaction
+    await session.endSession() // End session
+  } catch (error) {
+    await session.abortTransaction() // Rollback transaction
+    await session.endSession() // End session
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to create user'
+    )
+  }
 
   const createdUser = await User.create(user)
 
