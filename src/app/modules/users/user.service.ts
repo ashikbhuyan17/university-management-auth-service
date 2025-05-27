@@ -42,8 +42,8 @@ const createStudent = async (
     student.academicSemester // Reference to AcademicSemester -> _id
   ).lean()
 
+  let newUserAllData = null
   // using Transaction and Rollback check => https://ashik17.hashnode.dev/mongodb-transaction-rollback
-
   const session = await mongoose.startSession() // Session start
   try {
     session.startTransaction() // Start transaction
@@ -65,6 +65,7 @@ const createStudent = async (
     if (!newUser.length) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user')
     }
+    newUserAllData = newUser[0] // get user data
     await session.commitTransaction() // Commit transaction
     await session.endSession() // End session
   } catch (error) {
@@ -76,12 +77,24 @@ const createStudent = async (
     )
   }
 
-  const createdUser = await User.create(user)
-
-  if (!createdUser) {
-    throw new ApiError(400, 'Failed to create')
+  if (newUserAllData) {
+    // populate student data with academic semester, academic department and academic faculty
+    newUserAllData = await User.findOne({ id: newUserAllData.id }).populate({
+      path: 'student', // populate student data
+      populate: [
+        {
+          path: 'academicSemester', // populate academic semester data
+        },
+        {
+          path: 'academicDepartment', // populate academic department data
+        },
+        {
+          path: 'academicFaculty', // populate academic faculty data
+        },
+      ],
+    })
   }
-  return createdUser
+  return newUserAllData
 }
 
 const getUser = async (): Promise<IUser[] | null> => {
