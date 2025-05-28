@@ -1,5 +1,4 @@
 import httpStatus from 'http-status'
-import { createStudents } from './../students/students.service'
 import mongoose from 'mongoose'
 import config from '../../../config/index'
 import ApiError from '../../../errors/ApiError'
@@ -7,7 +6,7 @@ import { AcademicSemester } from '../academicSemester/academicSemester.model'
 import { IStudent } from '../student/student.interface'
 import { IUser } from './user.interface'
 import { User } from './user.model'
-import { generateFacultyId, generateStudentId } from './user.utils'
+import { generateStudentId } from './user.utils'
 import { Student } from '../student/student.model'
 
 /**

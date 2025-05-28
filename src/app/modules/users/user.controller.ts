@@ -1,4 +1,3 @@
-import { createStudents } from './../students/students.controller'
 import httpStatus from 'http-status'
 import { RequestHandler } from 'express'
 import { UserService } from './user.service'
@@ -22,7 +21,7 @@ const createStudent: RequestHandler = async (req, res, next) => {
     next(err)
   }
 }
-const getUser = async (req, res) => {
+const getUser: RequestHandler = async (req, res) => {
   const findUser = await UserService.getUser()
   res.status(200).json({
     success: true,
