@@ -1,63 +1,70 @@
+import { Request, Response } from 'express'
 import httpStatus from 'http-status'
-import { RequestHandler } from 'express'
-import { StudentService } from './student.service'
+import { paginationFields } from '../../../constants/pagination'
 import catchAsync from '../../../shared/catchAsync'
+import pick from '../../../shared/pick'
 import sendResponse from '../../../shared/sendResponse'
+import { studentFilterableFields } from './student.constant'
 import { IStudent } from './student.interface'
-import { UserService } from '../users/user.service'
+import { StudentService } from './student.service'
 
-const createStudent: RequestHandler = catchAsync(async (req, res) => {
-  const { student, ...userData } = req.body
-  const result = await UserService.createStudent(student, userData)
+const getSingleStudent = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+
+  const result = await StudentService.getSingleStudent(id)
 
   sendResponse<IStudent>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Semester fetched successfully !',
+    message: 'Student fetched successfully !',
     data: result,
   })
 })
 
-const getStudents: RequestHandler = async (req, res, next) => {
-  try {
-    const result = await StudentService.getStudents()
-    res.status(200).json({ success: true, data: result })
-  } catch (error) {
-    next(error)
-  }
-}
+const getAllStudents = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, studentFilterableFields)
+  const paginationOptions = pick(req.query, paginationFields)
 
-const getStudentById: RequestHandler = async (req, res, next) => {
-  try {
-    const result = await StudentService.getStudentById(req.params.id)
-    res.status(200).json({ success: true, data: result })
-  } catch (error) {
-    next(error)
-  }
-}
+  const result = await StudentService.getAllStudents(filters, paginationOptions)
 
-const updateStudent: RequestHandler = async (req, res, next) => {
-  try {
-    const result = await StudentService.updateStudent(req.params.id, req.body)
-    res.status(200).json({ success: true, data: result })
-  } catch (error) {
-    next(error)
-  }
-}
+  sendResponse<IStudent[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Students fetched successfully !',
+    meta: result.meta,
+    data: result.data,
+  })
+})
 
-const deleteStudent: RequestHandler = async (req, res, next) => {
-  try {
-    const result = await StudentService.deleteStudent(req.params.id)
-    res.status(200).json({ success: true, data: result })
-  } catch (error) {
-    next(error)
-  }
-}
+const updateStudent = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const updatedData = req.body
+
+  const result = await StudentService.updateStudent(id, updatedData)
+
+  sendResponse<IStudent>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student updated successfully !',
+    data: result,
+  })
+})
+const deleteStudent = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+
+  const result = await StudentService.deleteStudent(id)
+
+  sendResponse<IStudent>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student deleted successfully !',
+    data: result,
+  })
+})
 
 export const StudentController = {
-  createStudent,
-  getStudents,
-  getStudentById,
+  getSingleStudent,
+  getAllStudents,
   updateStudent,
   deleteStudent,
 }
