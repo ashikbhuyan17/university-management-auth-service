@@ -10,7 +10,7 @@ import { generateFacultyId, generateStudentId } from './user.utils'
 import { Student } from '../student/student.model'
 import { Faculty } from '../faculty/faculty.model'
 import { IFaculty } from '../faculty/faculty.interface'
-
+import bcrypt from 'bcrypt'
 /**
  * project overview:
  => ey project e user type ache, user type er moddhe student, faculty, admin and sobgula ke user model e store kora hobe.
@@ -35,6 +35,12 @@ const createStudent = async (
   if (!user.password) {
     user.password = config.default_student_pass as string //type alias , je ami sure eta string hbe
   }
+  // hash password
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bycrypt_salt_rounds)
+  )
+
   // set role
   user.role = 'student'
 

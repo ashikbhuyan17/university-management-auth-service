@@ -133,3 +133,6 @@ Rollback মানে হল পূর্ববর্তী অবস্থা�
 
 
 check the docs => https://ashik17.hashnode.dev/mongodb-transaction-rollback
+
+
+17-3: Hash Your Password using Pre Hook Middleware
